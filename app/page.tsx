@@ -308,7 +308,7 @@ export default function Home() {
               </p>
               <div className="flex gap-4 pt-6">
                 <a
-                  href="https://drive.google.com/file/d/1B39XV0NOOhgCsaT8B1S0dsCY_SlHNjfi/view?usp=sharing"
+                  href="https://drive.google.com/file/d/1fSMJFK3dJYlWf3DHg2dSoPjckWADh36Y/view?usp=sharing"
                   className="px-8 py-4 bg-accent text-accent-foreground font-semibold text-sm rounded-lg hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 hover:scale-105 active:scale-95"
                 >
                   View My CV
