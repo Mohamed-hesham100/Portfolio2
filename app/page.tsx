@@ -388,7 +388,7 @@ export default function Home() {
               </p>
               <div className="flex gap-4 pt-6">
                 <a
-                  href="https://drive.google.com/file/d/1B39XV0NOOhgCsaT8B1S0dsCY_SlHNjfi/view?usp=sharing"
+                  href="https://drive.google.com/file/d/1y_cvMXVzSAzAy_zNQo_DjYeT50jCvZac/view?usp=sharing"
                   className="group relative px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold text-sm rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/50"
                 >
                   <span className="relative z-10">View My CV</span>
