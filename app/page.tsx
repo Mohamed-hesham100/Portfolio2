@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const navigation = [
   { name: "About", href: "#about" },
@@ -11,6 +11,20 @@ const navigation = [
 
 const experiences = [
   {
+    year: "Early 2024",
+    title: "CS Student & Self-Taught Dev",
+    company: "Faculty of Computers and Information",
+    description:
+      "Combined academic foundations in Data Structures with intensive self-learning in the JavaScript/TypeScript ecosystem. Developed 15+ foundational projects, mastering clean code principles and modern DevOps deployment workflows.",
+  },
+  {
+    year: "2024 — 2025",
+    title: "Software Developer (MERN Stack)",
+    company: "Freelance & Diverse Projects",
+    description:
+      "Engineered real-time communication systems using Socket.io and Node.js. Built robust E-commerce platforms with Next.js, focusing on performance optimization, database schema design, and seamless AI-driven backend integrations. Delivered diverse web solutions including real-time chat, e-commerce, and custom applications for various clients.",
+  },
+  {
     year: "2025 — Present",
     title: "Full-Stack Engineer (Backend Specialist)",
     company: "Freelance & Specialized Projects",
@@ -18,22 +32,22 @@ const experiences = [
       "Architected and scaled complex backend systems using NestJS and PostgreSQL. Developed a high-traffic educational platform, implementing advanced routing logic, RBAC (Role-Based Access Control), and secure RESTful APIs to manage interactions between teachers and students efficiently.",
   },
   {
-    year: "2024 — 2025",
-    title: "Software Developer (MERN Stack)",
-    company: "Real-time & E-commerce Solutions",
+    year: "2026 — Present",
+    title: "DevOps Engineer & Deployment Maintainer",
+    company: "Infrastructure & Cloud Operations",
     description:
-      "Engineered real-time communication systems using Socket.io and Node.js. Built robust E-commerce platforms with Next.js, focusing on performance optimization, database schema design, and seamless AI-driven backend integrations.",
-  },
-  {
-    year: "Early 2024",
-    title: "CS Student & Self-Taught Dev",
-    company: "Faculty of Computers and Information",
-    description:
-      "Combined academic foundations in Data Structures with intensive self-learning in the JavaScript/TypeScript ecosystem. Developed 15+ foundational projects, mastering clean code principles and modern DevOps deployment workflows.",
+      "Orchestrated comprehensive DevOps workflows implementing Linux server management, PM2 process management, SSH secure access, SSL/TLS certificate automation, and DNS configuration. Established GitHub Actions CI/CD pipelines for automated testing and deployment, containerized applications with Docker, and maintained production infrastructure with 99.9% uptime.",
   },
 ];
 
 const projects = [
+  {
+    title: "MedSupplySA",
+    description:
+      "Saudi medical e-commerce platform for healthcare products with integrated Saudi payment gateways, secure checkout, and comprehensive product management.",
+    tags: ["Next.js", "TypeScript", "Node.js", "Saudi Payments"],
+    link: "https://medsupplysa.com/",
+  },
   {
     title: "LMS",
     description:
@@ -139,10 +153,18 @@ const skills = [
       "Zustand",
     ],
   },
-  // {
-  //   category: "DevOps & Cloud",
-  //   items: ["Docker", "AWS", "Vercel", "CI/CD", "Linux", "Git/GitHub"],
-  // },
+  {
+    category: "DevOps & Cloud",
+    items: [
+      "Linux",
+      "PM2",
+      "SSH",
+      "SSL/TLS",
+      "DNS",
+      "Docker",
+      "GitHub Actions (CI/CD)",
+    ],
+  },
   {
     category: "Specialized",
     items: [
@@ -174,6 +196,15 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const [isVisible, setIsVisible] = useState({
+    about: false,
+    experience: false,
+    skills: false,
+    projects: false,
+    contact: false,
+  });
+  const [particles, setParticles] = useState<Array<{ id: number; left: number; delay: number; size: number }>>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,83 +217,125 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    setIsMounted(true);
+    // Generate particles only on client
+    const generatedParticles = Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      delay: Math.random() * 15,
+      size: Math.random() * 4 + 2,
+    }));
+    setParticles(generatedParticles);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const aboutSection = document.getElementById('about');
+      const experienceSection = document.getElementById('experience');
+      const skillsSection = document.querySelector('section:nth-of-type(4)');
+      const projectsSection = document.getElementById('projects');
+      const contactSection = document.getElementById('contact');
+
+      if (aboutSection) {
+        const rect = aboutSection.getBoundingClientRect();
+        setIsVisible(prev => ({ ...prev, about: rect.top < window.innerHeight * 0.8 }));
+      }
+      if (experienceSection) {
+        const rect = experienceSection.getBoundingClientRect();
+        setIsVisible(prev => ({ ...prev, experience: rect.top < window.innerHeight * 0.8 }));
+      }
+      if (skillsSection) {
+        const rect = skillsSection.getBoundingClientRect();
+        setIsVisible(prev => ({ ...prev, skills: rect.top < window.innerHeight * 0.8 }));
+      }
+      if (projectsSection) {
+        const rect = projectsSection.getBoundingClientRect();
+        setIsVisible(prev => ({ ...prev, projects: rect.top < window.innerHeight * 0.8 }));
+      }
+      if (contactSection) {
+        const rect = contactSection.getBoundingClientRect();
+        setIsVisible(prev => ({ ...prev, contact: rect.top < window.innerHeight * 0.8 }));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial check
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Animated Background Gradient */}
-      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-background via-background to-accent/5 pointer-events-none" />
+    <div className="min-h-screen bg-background text-foreground overflow-hidden relative">
+      {/* Particle Background */}
+      {isMounted && (
+        <div className="particles">
+          {particles.map((particle) => (
+            <div
+              key={particle.id}
+              className="particle"
+              style={{
+                left: `${particle.left}%`,
+                animationDelay: `${particle.delay}s`,
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Animated Gradient Background */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#050508] via-[#0f172a] to-[#050508] pointer-events-none" />
+
+      {/* Gradient Orbs */}
+      <div className="fixed top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-pulse-glow pointer-events-none" />
+      <div className="fixed bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl animate-pulse-glow pointer-events-none" style={{ animationDelay: '1s' }} />
 
       {/* Sidebar Navigation */}
-      <nav className="fixed left-0 top-0 hidden lg:flex w-72 h-screen flex-col justify-between border-r border-border bg-background/80 backdrop-blur-md px-8 py-12 overflow-hidden">
-        {/* Floating Icons Background in Sidebar */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div
-            className="absolute top-10 left-4 text-accent/10 text-sm font-mono animate-float"
-            style={{ animationDelay: "0s" }}
-          >
-            {}
-          </div>
-          <div
-            className="absolute top-32 right-6 text-accent/10 text-sm font-mono animate-float"
-            style={{ animationDelay: "1s" }}
-          >
-            &lt;&gt;
-          </div>
-          <div
-            className="absolute top-56 left-8 text-accent/10 text-sm font-mono animate-float"
-            style={{ animationDelay: "2s" }}
-          >
-            ( )
-          </div>
-          <div
-            className="absolute top-96 right-4 text-accent/10 text-sm font-mono animate-float"
-            style={{ animationDelay: "1.5s" }}
-          >
-            [ ]
-          </div>
-          <div
-            className="absolute top-2/3 left-6 text-accent/10 text-sm font-mono animate-float"
-            style={{ animationDelay: "2.5s" }}
-          >
-            =&gt;
-          </div>
-        </div>
+      <nav className="fixed left-0 top-0 hidden lg:flex w-80 h-screen flex-col justify-between border-r border-border/30 glass-strong px-8 py-12 overflow-hidden z-50">
+        {/* Animated Gradient Border */}
+        <div className="absolute inset-0 border-r-2 border-gradient-to-b from-emerald-500 via-teal-500 to-emerald-500 opacity-50 animate-gradient-shift" />
 
-        <div className="relative z-10 animate-fadeInUp">
+        <div className="relative z-10 animate-slideInLeft">
           <div className="mb-20">
-            <p className="text-xs font-semibold text-accent uppercase tracking-widest mb-3">
-              &lt;Developer/&gt;
-            </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight">
-              Mohamed
+            <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 mb-4">
+              <p className="text-xs font-semibold gradient-text uppercase tracking-widest">
+                &lt;Developer/&gt;
+              </p>
+            </div>
+            <h1 className="text-5xl font-bold leading-tight tracking-tight">
+              <span className="gradient-text">Mohamed</span>
               <br />
-              Hisham
+              <span className="text-foreground">Hisham</span>
             </h1>
           </div>
-          <nav className="space-y-1">
+          <nav className="space-y-2">
             {navigation.map((item, idx) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="block text-sm font-medium text-muted-foreground hover:text-accent transition-all duration-300 py-2 px-2 rounded hover:bg-accent/10"
+                className="group block text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 py-3 px-4 rounded-xl hover:bg-gradient-to-r hover:from-emerald-500/10 hover:to-teal-500/10 hover:border hover:border-emerald-500/30 relative overflow-hidden"
                 style={{ animationDelay: `${idx * 0.1}s` }}
               >
-                {item.name}
+                <span className="relative z-10">{item.name}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-teal-500/10 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               </a>
             ))}
           </nav>
         </div>
-        <div className="relative z-10 space-y-6 animate-fadeInUp">
+        <div className="relative z-10 space-y-6 animate-slideInLeft" style={{ animationDelay: '0.3s' }}>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Building elegant interfaces and scalable systems.
+            Building elegant interfaces and scalable systems with modern technologies.
           </p>
-          <div className="space-y-2">
-            {socials.map((social) => (
+          <div className="space-y-3">
+            {socials.map((social, idx) => (
               <a
                 key={social.href}
                 href={social.href}
-                className="flex items-center text-xs text-muted-foreground hover:text-accent transition-colors duration-300"
+                className="flex items-center gap-3 text-xs text-muted-foreground hover:text-accent transition-all duration-300 group"
               >
-                {social.label}
+                <span className="w-2 h-2 rounded-full bg-emerald-500/50 group-hover:bg-teal-500 group-hover:animate-pulse transition-colors" />
+                <span className="group-hover:translate-x-1 transition-transform">{social.label}</span>
               </a>
             ))}
           </div>
@@ -270,15 +343,15 @@ export default function Home() {
       </nav>
 
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b border-border px-6 py-4">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 glass-strong border-b border-border/30 px-6 py-4">
         <div className="flex items-center justify-between">
-          <h1 className="font-bold text-lg">Mohamed Hisham </h1>
+          <h1 className="font-bold text-lg gradient-text">Mohamed Hisham</h1>
           <div className="flex gap-4 text-xs">
             {navigation.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-muted-foreground hover:text-accent"
+                className="text-muted-foreground hover:text-accent transition-colors"
               >
                 {item.name}
               </a>
@@ -288,17 +361,24 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="lg:ml-72">
+      <div className="lg:ml-80">
         {/* Hero Section */}
-        <section className="px-6 lg:px-16 pt-24 lg:pt-32 pb-24 max-w-5xl">
+        <section className="px-6 lg:px-16  pb-24 max-w-6xl relative">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
             <div className="lg:col-span-2 space-y-8 animate-slideInLeft">
-              <div className="space-y-4">
-                <span className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-semibold uppercase tracking-widest">
-                  Full Stack Engineer
-                </span>
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 animate-bounce-subtle">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-semibold gradient-text uppercase tracking-widest">
+                    Full Stack Engineer
+                  </span>
+                </div>
                 <h2 className="text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
-                  I build accessible, high-performance web experiences.
+                  <span className="animate-text-shimmer">I build</span>
+                  <br />
+                  <span className="gradient-text">extraordinary</span>
+                  <br />
+                  <span className="text-foreground">web experiences.</span>
                 </h2>
               </div>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
@@ -309,38 +389,43 @@ export default function Home() {
               <div className="flex gap-4 pt-6">
                 <a
                   href="https://drive.google.com/file/d/1B39XV0NOOhgCsaT8B1S0dsCY_SlHNjfi/view?usp=sharing"
-                  className="px-8 py-4 bg-accent text-accent-foreground font-semibold text-sm rounded-lg hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 hover:scale-105 active:scale-95"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold text-sm rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/50"
                 >
-                  View My CV
+                  <span className="relative z-10">View My CV</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
                 <a
                   href="#projects"
-                  className="px-8 py-4 border-2 border-accent text-accent font-semibold text-sm rounded-lg hover:bg-accent/10 transition-all duration-300"
+                  className="group px-8 py-4 border-2 border-emerald-500/50 text-emerald-400 font-semibold text-sm rounded-xl hover:bg-emerald-500/10 hover:border-emerald-500 transition-all duration-300 hover:scale-105 relative overflow-hidden"
                 >
-                  Projects
+                  <span className="relative z-10">Projects</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-teal-500/20 to-emerald-500/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                 </a>
               </div>
             </div>
 
             {/* Profile Image */}
             <div className="lg:col-span-1 flex justify-center animate-slideInRight">
-              <div className="relative w-full max-w-xs group">
+              <div className="relative w-full max-w-sm group">
                 {/* Animated glow background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-accent via-accent/50 to-transparent rounded-2xl blur-2xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-500 rounded-3xl blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 animate-pulse-glow" />
 
-                {/* Secondary glow */}
-                <div className="absolute -inset-1 bg-gradient-to-tr from-transparent to-accent/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                {/* Rotating border */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 rounded-3xl opacity-20 animate-rotate-slow" style={{ animationDuration: '10s' }} />
 
                 {/* Image container */}
-                <div className="relative overflow-hidden rounded-2xl border border-accent/30 group-hover:border-accent/60 transition-colors duration-500 shadow-xl group-hover:shadow-2xl group-hover:shadow-accent/30 transition-all">
+                <div className="relative overflow-hidden rounded-3xl border-2 border-emerald-500/30 group-hover:border-emerald-500/60 transition-colors duration-500 shadow-2xl group-hover:shadow-emerald-500/30 transition-all">
                   <img
                     src="/profile.jpg"
                     alt="Mohamed Hisham - Full Stack Developer"
-                    className="w-full h-100 aspect-square object-cover group-hover:scale-110 transition-transform duration-700"
+                    className="w-full h-auto aspect-square object-cover group-hover:scale-110 transition-transform duration-700"
                   />
 
                   {/* Overlay gradient on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-500/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 </div>
               </div>
             </div>
@@ -350,53 +435,53 @@ export default function Home() {
         {/* About Section */}
         <section
           id="about"
-          className="px-6 lg:px-16 py-32 border-t border-border max-w-5xl"
+          className={`px-6 lg:px-16 py-32 border-t border-border/30 max-w-6xl relative transition-all duration-1000 ${isVisible.about ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
         >
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             <div className="lg:col-span-2">
-              <h2 className="text-xs font-semibold text-accent uppercase tracking-widest sticky top-8">
+              <h2 className="text-xs font-semibold gradient-text uppercase tracking-widest sticky top-8">
                 About Me
               </h2>
             </div>
             <div className="lg:col-span-3 space-y-6">
               <p className="text-lg leading-relaxed">
-                I am a **Full-Stack Engineer** with over 1.5 years of hands-on
-                experience, deeply rooted in the **JavaScript/TypeScript**
-                ecosystem. While I excel across the entire stack using **React**
-                and **Next.js**, my true passion lies in architecting robust
-                **Back-end** systems with **Node.js** and **NestJS**.
+                I am a <span className="gradient-text font-semibold">Full-Stack Engineer & DevOps Specialist</span> with over 2.5 years of hands-on
+                experience, deeply rooted in the <span className="text-amber-400">JavaScript/TypeScript</span>
+                ecosystem. While I excel across the entire stack using <span className="text-teal-400">React</span>
+                and <span className="text-teal-400">Next.js</span>, my true passion lies in architecting robust
+                <span className="text-amber-400"> Back-end</span> systems with <span className="text-teal-400">Node.js</span> and <span className="text-teal-400">NestJS</span>.
               </p>
               <p className="text-lg leading-relaxed text-muted-foreground">
-                From developing complex **E-commerce** platforms to building
-                **Real-time Chat** applications using **Socket.io**, I focus on
+                From developing complex <span className="text-amber-400">E-commerce</span> platforms to building
+                <span className="text-teal-400"> Real-time Chat</span> applications using <span className="text-amber-400">Socket.io</span>, I focus on
                 creating scalable, high-performance solutions. Currently, I am
-                bridging the gap between web development and **AI integration**,
-                while managing deployments through **Cloud & DevOps** workflows.
+                bridging the gap between web development and <span className="gradient-text">AI integration</span>,
+                while managing deployments through <span className="text-teal-400">Cloud & DevOps</span> workflows including Linux server management, Docker containerization, and GitHub Actions CI/CD pipelines.
               </p>
               <p className="text-lg leading-relaxed text-muted-foreground">
-                As a **Computer Science student** and a self-taught developer, I
+                As a <span className="text-amber-400">Computer Science student</span> and a self-taught developer, I
                 combine academic foundations with a relentless drive to master
                 new technologies. I thrive on solving complex logic puzzles and
-                optimizing database performance with **PostgreSQL** and
-                **MongoDB**.
+                optimizing database performance with <span className="text-teal-400">PostgreSQL</span> and
+                <span className="text-teal-400">MongoDB</span>, while maintaining production infrastructure with 99.9% uptime through automated deployment strategies.
               </p>
 
-              <div className="pt-4 grid grid-cols-3 gap-4">
-                <div className="p-4 rounded-lg bg-accent/5 border border-accent/20 hover:border-accent/50 transition-all">
-                  <p className="text-2xl font-bold text-accent">1.5+</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+              <div className="pt-8 grid grid-cols-3 gap-4">
+                <div className="group p-6 rounded-2xl glass border border-emerald-500/20 hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20">
+                  <p className="text-3xl font-bold gradient-text">2.5+</p>
+                  <p className="text-xs text-muted-foreground mt-2">
                     Years Experience
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-accent/5 border border-accent/20 hover:border-accent/50 transition-all">
-                  <p className="text-2xl font-bold text-accent">Hybrid</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                <div className="group p-6 rounded-2xl glass border border-teal-500/20 hover:border-teal-500/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-teal-500/20">
+                  <p className="text-3xl font-bold gradient-text-secondary">Hybrid</p>
+                  <p className="text-xs text-muted-foreground mt-2">
                     CS & Self-Taught
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-accent/5 border border-accent/20 hover:border-accent/50 transition-all">
-                  <p className="text-2xl font-bold text-accent">AI-Ready</p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                <div className="group p-6 rounded-2xl glass border border-emerald-500/20 hover:border-emerald-500/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20">
+                  <p className="text-3xl font-bold gradient-text">AI-Ready</p>
+                  <p className="text-xs text-muted-foreground mt-2">
                     Tech Mindset
                   </p>
                 </div>
@@ -408,11 +493,11 @@ export default function Home() {
         {/* Experience Section */}
         <section
           id="experience"
-          className="px-6 lg:px-16 py-32 border-t border-border max-w-5xl"
+          className={`px-6 lg:px-16 py-32 border-t border-border/30 max-w-6xl relative transition-all duration-1000 ${isVisible.experience ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
         >
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             <div className="lg:col-span-2">
-              <h2 className="text-xs font-semibold text-accent uppercase tracking-widest sticky top-8">
+              <h2 className="text-xs font-semibold gradient-text uppercase tracking-widest sticky top-8">
                 Experience
               </h2>
             </div>
@@ -420,23 +505,23 @@ export default function Home() {
               {/* Timeline */}
               <div className="relative space-y-8">
                 {/* Timeline line */}
-                <div className="absolute left-7 top-0 bottom-0 w-px bg-gradient-to-b from-accent via-accent/50 to-transparent" />
+                <div className="absolute left-7 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-500 via-teal-500 to-transparent" />
 
                 {experiences.map((exp, idx) => (
                   <div key={idx} className="relative pl-20 group">
                     {/* Timeline dot */}
-                    <div className="absolute left-0 top-2 w-4 h-4 rounded-full bg-accent border-4 border-background group-hover:scale-125 transition-transform duration-300" />
+                    <div className="absolute left-0 top-2 w-4 h-4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 border-4 border-background group-hover:scale-125 transition-transform duration-300 animate-pulse" />
 
                     {/* Card */}
-                    <div className="p-6 rounded-lg border border-border bg-card hover:border-accent/50 hover:bg-accent/5 transition-all duration-300">
-                      <div className="space-y-2">
-                        <p className="text-xs font-semibold text-accent uppercase tracking-wider">
+                    <div className="group p-6 rounded-2xl glass border border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/5 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20">
+                      <div className="space-y-3">
+                        <p className="text-xs font-semibold gradient-text uppercase tracking-wider">
                           {exp.year}
                         </p>
-                        <h3 className="text-xl font-semibold group-hover:text-accent transition-colors">
+                        <h3 className="text-xl font-semibold group-hover:text-emerald-400 transition-colors">
                           {exp.title}
                         </h3>
-                        <p className="text-sm font-medium text-muted-foreground">
+                        <p className="text-sm font-medium text-teal-400">
                           @ {exp.company}
                         </p>
                         <p className="text-base text-muted-foreground leading-relaxed pt-2">
@@ -452,10 +537,10 @@ export default function Home() {
         </section>
 
         {/* Skills Section */}
-        <section className="px-6 lg:px-16 py-32 border-t border-border max-w-5xl">
+        <section className={`px-6 lg:px-16 py-32 border-t border-border/30 max-w-6xl relative transition-all duration-1000 ${isVisible.skills ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             <div className="lg:col-span-2">
-              <h2 className="text-xs font-semibold text-accent uppercase tracking-widest sticky top-8">
+              <h2 className="text-xs font-semibold gradient-text uppercase tracking-widest sticky top-8">
                 Skills & Tools
               </h2>
             </div>
@@ -464,9 +549,10 @@ export default function Home() {
                 {skills.map((skillGroup, idx) => (
                   <div
                     key={skillGroup.category}
-                    className="p-6 rounded-lg border border-border hover:border-accent/50 bg-card hover:bg-accent/5 transition-all duration-300 group"
+                    className="group p-6 rounded-2xl glass border border-emerald-500/20 hover:border-emerald-500/50 bg-card hover:bg-emerald-500/5 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20"
                   >
-                    <h3 className="text-sm font-bold text-accent mb-4 group-hover:translate-x-1 transition-transform">
+                    <h3 className="text-sm font-bold gradient-text mb-4 group-hover:translate-x-1 transition-transform flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                       {skillGroup.category}
                     </h3>
                     <ul className="space-y-2.5">
@@ -475,7 +561,7 @@ export default function Home() {
                           key={skill}
                           className="text-sm text-muted-foreground group-hover:text-foreground transition-colors flex items-center gap-2"
                         >
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-teal-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                           {skill}
                         </li>
                       ))}
@@ -490,11 +576,11 @@ export default function Home() {
         {/* Projects Section */}
         <section
           id="projects"
-          className="px-6 lg:px-16 py-32 border-t border-border max-w-5xl"
+          className={`px-6 lg:px-16 py-32 border-t border-border/30 max-w-6xl relative transition-all duration-1000 ${isVisible.projects ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
         >
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 mb-16">
             <div className="lg:col-span-2">
-              <h2 className="text-xs font-semibold text-accent uppercase tracking-widest sticky top-8">
+              <h2 className="text-xs font-semibold gradient-text uppercase tracking-widest sticky top-8">
                 Featured Projects
               </h2>
             </div>
@@ -512,17 +598,17 @@ export default function Home() {
               <a
                 key={idx}
                 href={project.link}
-                className="group relative overflow-hidden p-6 rounded-xl border border-border hover:border-accent/50 bg-card hover:bg-accent/5 transition-all duration-300"
+                className="group relative overflow-hidden p-6 rounded-2xl glass border border-emerald-500/20 hover:border-emerald-500/50 bg-card hover:bg-emerald-500/5 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20"
                 onMouseEnter={() => setHoveredProject(idx)}
                 onMouseLeave={() => setHoveredProject(null)}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-accent/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative space-y-3">
                   <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-lg font-semibold group-hover:text-accent transition-colors flex-1">
+                    <h3 className="text-lg font-semibold group-hover:text-emerald-400 transition-colors flex-1">
                       {project.title}
                     </h3>
-                    <span className="text-2xl text-muted-foreground group-hover:text-accent group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300">
+                    <span className="text-2xl text-muted-foreground group-hover:text-teal-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300">
                       →
                     </span>
                   </div>
@@ -533,13 +619,14 @@ export default function Home() {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs px-2.5 py-1 rounded-md bg-accent/10 text-accent border border-accent/20 group-hover:border-accent/50 transition-all"
+                        className="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:border-emerald-500/50 group-hover:bg-emerald-500/20 transition-all"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
                 </div>
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 rounded-2xl" />
               </a>
             ))}
           </div>
@@ -548,17 +635,17 @@ export default function Home() {
         {/* Contact Section */}
         <section
           id="contact"
-          className="px-6 lg:px-16 py-32 border-t border-border max-w-5xl"
+          className={`px-6 lg:px-16 py-32 border-t border-border/30 max-w-6xl relative transition-all duration-1000 ${isVisible.contact ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}
         >
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
             <div className="lg:col-span-2">
-              <h2 className="text-xs font-semibold text-accent uppercase tracking-widest sticky top-8">
+              <h2 className="text-xs font-semibold gradient-text uppercase tracking-widest sticky top-8">
                 Contact
               </h2>
             </div>
             <div className="lg:col-span-3 space-y-8">
               <div>
-                <p className="text-2xl lg:text-3xl font-bold mb-4">
+                <p className="text-2xl lg:text-3xl font-bold mb-4 gradient-text">
                   Let's build something amazing together.
                 </p>
                 <p className="text-base text-muted-foreground leading-relaxed">
@@ -576,19 +663,20 @@ export default function Home() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="flex-1 px-4 py-3 rounded-lg bg-card border border-border text-sm focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all"
+                    className="flex-1 px-4 py-3 rounded-xl glass border border-emerald-500/30 bg-card text-sm focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all hover:border-emerald-500/50"
                   />
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-accent text-accent-foreground font-semibold text-sm rounded-lg hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap"
+                    className="group px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold text-sm rounded-xl hover:shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 hover:scale-105 active:scale-95 whitespace-nowrap relative overflow-hidden"
                   >
-                    {submitted ? "Sent ✓" : "Send Message"}
+                    <span className="relative z-10">{submitted ? "Sent ✓" : "Send Message"}</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </div>
               </form>
 
-              <div className="space-y-4 pt-8 border-t border-border">
-                <p className="text-xs font-semibold text-accent uppercase tracking-wider">
+              <div className="space-y-4 pt-8 border-t border-border/30">
+                <p className="text-xs font-semibold gradient-text uppercase tracking-wider">
                   Connect
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -597,11 +685,11 @@ export default function Home() {
                     href="https://github.com/Mohamed-hesham100"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center p-3 rounded-lg border border-border bg-card hover:border-accent/50 hover:bg-accent/5 text-muted-foreground hover:text-accent transition-all duration-300"
+                    className="group flex items-center justify-center p-4 rounded-xl glass border border-emerald-500/20 hover:border-emerald-500/50 bg-card hover:bg-emerald-500/5 text-muted-foreground hover:text-emerald-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20"
                     title="GitHub"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-5 h-5 group-hover:animate-bounce-subtle"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -614,11 +702,11 @@ export default function Home() {
                     href="https://www.linkedin.com/in/mohamed-h-3362b53a1/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center p-3 rounded-lg border border-border bg-card hover:border-accent/50 hover:bg-accent/5 text-muted-foreground hover:text-accent transition-all duration-300"
+                    className="group flex items-center justify-center p-4 rounded-xl glass border border-cyan-500/20 hover:border-cyan-500/50 bg-card hover:bg-cyan-500/5 text-muted-foreground hover:text-teal-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-teal-500/20"
                     title="LinkedIn"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-5 h-5 group-hover:animate-bounce-subtle"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -628,12 +716,12 @@ export default function Home() {
 
                   {/* Email */}
                   <a
-                    href="mh1351448@gmail.com"
-                    className="flex items-center justify-center p-3 rounded-lg border border-border bg-card hover:border-accent/50 hover:bg-accent/5 text-muted-foreground hover:text-accent transition-all duration-300"
+                    href="mailto:mh1351448@gmail.com"
+                    className="group flex items-center justify-center p-4 rounded-xl glass border border-emerald-500/20 hover:border-emerald-500/50 bg-card hover:bg-emerald-500/5 text-muted-foreground hover:text-emerald-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20"
                     title="Email"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-5 h-5 group-hover:animate-bounce-subtle"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
