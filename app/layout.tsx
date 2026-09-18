@@ -21,23 +21,83 @@ const signature = Caveat({
   weight: ['500', '600', '700'],
 })
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+
 export const metadata: Metadata = {
-  title: 'Mohamed Dev — Full Stack Developer',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'dev',
+    template: '%s · dev',
+  },
+  applicationName: 'dev',
   description:
-    'Mohamed Hisham — Full Stack Developer building scalable web solutions. NestJS, Next.js, PostgreSQL. Available for freelance.',
-  authors: [{ name: 'Mohamed Hisham' }],
+    'Mohamed Hisham (dev) — portfolio of web projects, skills, and experience. NestJS, Next.js, PostgreSQL. Available for freelance.',
+  keywords: [
+    'dev',
+    'Mohamed Hisham',
+    'Mohamed Dev',
+    'portfolio',
+    'web developer',
+    'NestJS',
+    'Next.js',
+    'PostgreSQL',
+    'Cairo',
+  ],
+  authors: [{ name: 'Mohamed Hisham', url: 'https://github.com/Mohamed-hesham100' }],
+  creator: 'Mohamed Hisham',
+  publisher: 'dev',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'Mohamed Dev — Full Stack Developer',
-    description: 'I build scalable web solutions. Available for freelance.',
+    title: 'dev',
+    description:
+      'Portfolio of Mohamed Hisham — building scalable web solutions. Available for freelance.',
     type: 'website',
     locale: 'en_US',
+    siteName: 'dev',
+    images: [
+      {
+        url: '/logo-mh.png',
+        width: 1024,
+        height: 1024,
+        alt: 'dev',
+      },
+    ],
   },
+  twitter: {
+    card: 'summary',
+    title: 'dev',
+    description:
+      'Portfolio of Mohamed Hisham — building scalable web solutions. Available for freelance.',
+    images: ['/logo-mh.png'],
+  },
+  icons: {
+    icon: [{ url: '/logo-mh.png', type: 'image/png' }],
+    apple: [{ url: '/logo-mh.png' }],
+    shortcut: ['/logo-mh.png'],
+  },
+  category: 'technology',
 }
 
 export const viewport: Viewport = {
   themeColor: '#08080f',
   width: 'device-width',
   initialScale: 1,
+  colorScheme: 'dark',
 }
 
 export default function RootLayout({
