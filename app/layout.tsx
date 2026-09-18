@@ -28,16 +28,16 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'dev',
-    template: '%s · dev',
+    default: 'Mohamed Dev',
+    template: '%s · Mohamed Dev',
   },
-  applicationName: 'dev',
+  applicationName: 'Mohamed Dev',
   description:
-    'Mohamed Hisham (dev) — portfolio of web projects, skills, and experience. NestJS, Next.js, PostgreSQL. Available for freelance.',
+    'Mohamed Hisham (Mohamed Dev) — portfolio of web projects, skills, and experience. NestJS, Next.js, PostgreSQL. Available for freelance.',
   keywords: [
-    'dev',
-    'Mohamed Hisham',
     'Mohamed Dev',
+    'Mohamed Hisham',
+    'dev',
     'portfolio',
     'web developer',
     'NestJS',
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Mohamed Hisham', url: 'https://github.com/Mohamed-hesham100' }],
   creator: 'Mohamed Hisham',
-  publisher: 'dev',
+  publisher: 'Mohamed Dev',
   robots: {
     index: true,
     follow: true,
@@ -63,24 +63,24 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'dev',
+    title: 'Mohamed Dev',
     description:
       'Portfolio of Mohamed Hisham — building scalable web solutions. Available for freelance.',
     type: 'website',
     locale: 'en_US',
-    siteName: 'dev',
+    siteName: 'Mohamed Dev',
     images: [
       {
         url: '/logo-mh.png',
         width: 1024,
         height: 1024,
-        alt: 'dev',
+        alt: 'Mohamed Dev',
       },
     ],
   },
   twitter: {
     card: 'summary',
-    title: 'dev',
+    title: 'Mohamed Dev',
     description:
       'Portfolio of Mohamed Hisham — building scalable web solutions. Available for freelance.',
     images: ['/logo-mh.png'],
