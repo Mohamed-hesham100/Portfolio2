@@ -1,42 +1,43 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, JetBrains_Mono, Caveat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const geist = Geist({ subsets: ["latin"], variable: '--font-geist' });
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: '--font-geist-mono' });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700', '800'],
+})
+
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: ['400', '500', '600'],
+})
+
+const signature = Caveat({
+  subsets: ['latin'],
+  variable: '--font-signature',
+  weight: ['500', '600', '700'],
+})
 
 export const metadata: Metadata = {
-  title: 'Portfolio of Mohamed Hisham',
-  description: 'Ultra-premium, futuristic developer portfolio showcasing projects, skills, and experience with luxury SaaS design - Portfolio of Mohamed Hisham',
-  generator: 'v0.app',
-  // icons: {
-  //   icon: [
-  //     {
-  //       url: '/icon-light-32x32.png',
-  //       media: '(prefers-color-scheme: light)',
-  //     },
-  //     {
-  //       url: '/icon-dark-32x32.png',
-  //       media: '(prefers-color-scheme: dark)',
-  //     },
-  //     {
-  //       url: '/icon.svg',
-  //       type: 'image/svg+xml',
-  //     },
-  //   ],
-  //   apple: '/apple-icon.png',
-  // },
+  title: 'Mohamed Dev — Full Stack Developer',
+  description:
+    'Mohamed Hisham — Full Stack Developer building scalable web solutions. NestJS, Next.js, PostgreSQL. Available for freelance.',
+  authors: [{ name: 'Mohamed Hisham' }],
+  openGraph: {
+    title: 'Mohamed Dev — Full Stack Developer',
+    description: 'I build scalable web solutions. Available for freelance.',
+    type: 'website',
+    locale: 'en_US',
+  },
 }
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f0f1e' },
-  ],
+  themeColor: '#08080f',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
 }
 
 export default function RootLayout({
@@ -45,8 +46,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${geist.variable} ${geistMono.variable} font-sans antialiased bg-[#050508] text-[#e2e8f0]`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${mono.variable} ${signature.variable} antialiased`}>
         {children}
         <Analytics />
       </body>
