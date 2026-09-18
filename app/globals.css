@@ -1878,12 +1878,12 @@ a.g-card {
 .mnav-list {
   list-style: none;
   margin: 0;
-  padding: 0.2rem;
+  padding: 0.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.2rem;
   border-radius: 16px;
-  background: rgba(44, 44, 46, 0.92);
+  background: #2c2c2e;
   overflow: hidden;
 }
 
@@ -1895,7 +1895,7 @@ a.g-card {
 }
 
 .mnav-list li + li {
-  border-top: 1px solid rgba(84, 84, 88, 0.45);
+  border-top: none;
 }
 
 .mnav-root.is-open .mnav-list li {
@@ -1909,26 +1909,33 @@ a.g-card {
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: 0.85rem;
-  padding: 0.72rem 0.7rem;
-  border-radius: 0;
+  padding: 0.72rem 0.75rem;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: transparent;
   text-decoration: none;
   color: #f2f2f7;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
 .mnav-link:hover,
 .mnav-link:focus-visible {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
   outline: none;
 }
 
 .mnav-link:active {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.07);
 }
 
+/* Active row: neutral gray matching the menu — no blue wash */
+.mnav .mnav-link.is-active,
 .mnav-link.is-active {
-  background: rgba(10, 132, 255, 0.14);
+  background: #3a3a3c !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #ffffff;
+  box-shadow: none;
 }
 
 .mnav-link.is-home .mnav-ico { background: var(--ios-blue); }
