@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, type CSSProperties } from 'react'
 
 const PHOTO = '/profile.jpg'
 const CV =
@@ -443,6 +443,65 @@ const experience = [
   },
 ]
 
+function NavSectionIcon({ id }: { id: string }) {
+  const common = {
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.85,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true as const,
+  }
+
+  if (id === 'home') {
+    return (
+      <svg {...common}>
+        <path d="M4 10.5 12 4l8 6.5V20a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 20v-9.5Z" />
+        <path d="M9.5 21.5V14h5v7.5" />
+      </svg>
+    )
+  }
+  if (id === 'about') {
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="8" r="3.2" />
+        <path d="M5.5 19.5c1.4-3.2 3.8-4.8 6.5-4.8s5.1 1.6 6.5 4.8" />
+      </svg>
+    )
+  }
+  if (id === 'skills') {
+    return (
+      <svg {...common}>
+        <path d="M12 3.5 14.2 9H20l-4.6 3.5L17.5 18 12 14.6 6.5 18l2.1-5.5L4 9h5.8L12 3.5Z" />
+      </svg>
+    )
+  }
+  if (id === 'projects') {
+    return (
+      <svg {...common}>
+        <rect x="3.5" y="4.5" width="7" height="7" rx="1.5" />
+        <rect x="13.5" y="4.5" width="7" height="7" rx="1.5" />
+        <rect x="3.5" y="12.5" width="7" height="7" rx="1.5" />
+        <rect x="13.5" y="12.5" width="7" height="7" rx="1.5" />
+      </svg>
+    )
+  }
+  if (id === 'experience') {
+    return (
+      <svg {...common}>
+        <rect x="3" y="7" width="18" height="13" rx="2" />
+        <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7M3 12h18" />
+      </svg>
+    )
+  }
+  return (
+    <svg {...common}>
+      <path d="M21 12a8 8 0 0 1-8 8H4l2.3-2.7A8 8 0 1 1 21 12Z" />
+    </svg>
+  )
+}
+
 function GithubIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -665,64 +724,25 @@ function ProjectCard({
   )
 }
 
-function ContactMascot({ mode }: { mode: 'idle' | 'typing' | 'sent' }) {
-  return (
-    <div className={`contact-mascot is-${mode}`} aria-hidden>
-      <div className="contact-mascot-bubble">
-        {mode === 'typing' ? (
-          <span className="contact-mascot-dots">
-            <i />
-            <i />
-            <i />
-          </span>
-        ) : mode === 'sent' ? (
-          <span>Sent ✓</span>
-        ) : (
-          <span>Say hi</span>
-        )}
-      </div>
-      <div className="contact-mascot-figure">
-        <img
-          src="/contact-mascot-idle.png"
-          alt=""
-          className="contact-mascot-img idle"
-          width={120}
-          height={120}
-        />
-        <img
-          src="/contact-mascot-typing.png"
-          alt=""
-          className="contact-mascot-img typing"
-          width={120}
-          height={120}
-        />
-      </div>
-      <div className="contact-mascot-shadow" />
-    </div>
-  )
-}
-
 export default function Home() {
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('home')
   const [open, setOpen] = useState(false)
   const [photoOk, setPhotoOk] = useState(true)
-  const [formMode, setFormMode] = useState<'idle' | 'typing' | 'sent'>('idle')
-  const typingTimer = useRef<number | null>(null)
-
-  const markTyping = () => {
-    setFormMode('typing')
-    if (typingTimer.current) window.clearTimeout(typingTimer.current)
-    typingTimer.current = window.setTimeout(() => {
-      setFormMode((m) => (m === 'sent' ? m : 'idle'))
-    }, 1600)
-  }
 
   useEffect(() => {
-    return () => {
-      if (typingTimer.current) window.clearTimeout(typingTimer.current)
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
     }
-  }, [])
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = prev
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [open])
 
   useEffect(() => {
     const onScroll = () => {
@@ -759,9 +779,9 @@ export default function Home() {
   return (
     <>
       {/* ── NAV ── */}
-      <header className={`nav ${scrolled ? 'on' : ''}`}>
+      <header className={`nav ${scrolled || open ? 'on' : ''}`}>
         <div className="wrap flex h-full items-center justify-between gap-4">
-          <a href="#home" className="logo" aria-label="Mohamed Hisham">
+          <a href="#home" className="logo" aria-label="Mohamed Hisham" onClick={() => setOpen(false)}>
             <img src="/logo-mh.png" alt="Mohamed Hisham" className="logo-img" width={40} height={40} />
           </a>
 
@@ -784,8 +804,9 @@ export default function Home() {
             </a>
             <button
               type="button"
-              className="nav-menu-btn"
+              className={`nav-menu-btn ${open ? 'is-open' : ''}`}
               aria-expanded={open}
+              aria-controls="mobile-nav"
               aria-label={open ? 'Close menu' : 'Open menu'}
               onClick={() => setOpen((v) => !v)}
             >
@@ -795,23 +816,66 @@ export default function Home() {
         </div>
       </header>
 
-      {open && (
-        <div className="mnav">
-          {nav.map((item) => (
+      <div
+        className={`mnav-root ${open ? 'is-open' : ''}`}
+        aria-hidden={!open}
+      >
+        <button
+          type="button"
+          className="mnav-backdrop"
+          aria-label="Close menu"
+          tabIndex={open ? 0 : -1}
+          onClick={() => setOpen(false)}
+        />
+        <nav id="mobile-nav" className="mnav" aria-label="Mobile">
+          <div className="mnav-head">
+            <p className="mnav-name">Mohamed Hisham</p>
+          </div>
+
+          <ul className="mnav-list">
+            {nav.map((item, i) => (
+              <li key={item.id} style={{ '--i': i } as CSSProperties}>
+                <a
+                  href={`#${item.id}`}
+                  className={`mnav-link is-${item.id} ${active === item.id ? 'is-active' : ''}`}
+                  tabIndex={open ? 0 : -1}
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="mnav-ico" aria-hidden>
+                    <NavSectionIcon id={item.id} />
+                  </span>
+                  <span className="mnav-label">{item.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mnav-foot">
             <a
-              key={item.id}
-              href={`#${item.id}`}
-              className="text-base font-medium text-text"
+              href={CV}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mnav-cv"
+              tabIndex={open ? 0 : -1}
               onClick={() => setOpen(false)}
             >
-              {item.name}
+              <DownloadIcon />
+              Download CV
             </a>
-          ))}
-          <a href={CV} target="_blank" rel="noopener noreferrer" className="font-medium text-violet-2">
-            Download CV ↓
-          </a>
-        </div>
-      )}
+            <div className="mnav-social">
+              <a href={GITHUB} target="_blank" rel="noopener noreferrer" aria-label="GitHub" tabIndex={open ? 0 : -1}>
+                <GithubIcon />
+              </a>
+              <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" tabIndex={open ? 0 : -1}>
+                <LinkedinIcon />
+              </a>
+              <a href={`mailto:${MAIL}`} aria-label="Email" tabIndex={open ? 0 : -1}>
+                <MailIcon />
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
 
       <main>
         {/* ── HERO ── */}
@@ -1102,7 +1166,6 @@ export default function Home() {
           <div className="wrap">
             <div className="contact-stage">
               <div className="contact-band">
-              <ContactMascot mode={formMode} />
               <div className="contact-top">
                 <div>
                   <p className="sec-tag">Let&apos;s work together</p>
@@ -1175,11 +1238,7 @@ export default function Home() {
                   const body = encodeURIComponent(
                     `${message}\n\n— ${name || 'Visitor'}${email ? `\n${email}` : ''}`,
                   )
-                  setFormMode('sent')
-                  if (typingTimer.current) window.clearTimeout(typingTimer.current)
-                  window.setTimeout(() => {
-                    window.location.href = `mailto:${MAIL}?subject=${subject}&body=${body}`
-                  }, 450)
+                  window.location.href = `mailto:${MAIL}?subject=${subject}&body=${body}`
                 }}
               >
                 <div className="contact-form-grid">
@@ -1191,8 +1250,6 @@ export default function Home() {
                       type="text"
                       placeholder="Your name"
                       required
-                      onInput={markTyping}
-                      onFocus={markTyping}
                     />
                   </label>
                   <label className="contact-field">
@@ -1203,8 +1260,6 @@ export default function Home() {
                       type="email"
                       placeholder="you@email.com"
                       required
-                      onInput={markTyping}
-                      onFocus={markTyping}
                     />
                   </label>
                 </div>
@@ -1216,8 +1271,6 @@ export default function Home() {
                     rows={4}
                     placeholder="Tell me about your project…"
                     required
-                    onInput={markTyping}
-                    onFocus={markTyping}
                   />
                 </label>
                 <button type="submit" className="btn btn-fill contact-submit">
