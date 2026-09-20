@@ -315,11 +315,11 @@ const projects = [
     image: '/jobconnect.png',
   },
   {
-    title: 'Sharaf DG Egypt',
-    desc: 'Retail checkout & inventory',
-    tags: ['Next.js', 'MongoDB', 'Node.js'],
-    link: 'https://egypt.sharafdg.com/',
-    image: '/sharafdg.png',
+    title: 'Night Club VIP',
+    desc: 'Luxury Cairo nightclub site — VIP packages, gallery & booking',
+    tags: ['React', 'Vite', 'Landing'],
+    link: 'https://night-glup.vercel.app/',
+    image: '/nightclub.png',
   },
   {
     title: 'Diar Real Estate',
