@@ -4,8 +4,8 @@ import { useEffect, useState, useRef, type CSSProperties } from 'react'
 
 const PHOTO = '/profile.jpg'
 const CV =
-  'https://drive.google.com/file/d/1dcRTe5TjGlbNo3gHnx6kqcZqT0ibvy1N/view?usp=sharing'
-const MAIL = 'mh1351448@gmail.com'
+  'https://drive.google.com/file/d/1i-e-Jb6SL9HZ5JmEGPMcyiQtjTxp3a8T/view?usp=sharing'
+const MAIL = 'apohamed1235@gmail.com'
 const GITHUB = 'https://github.com/Mohamed-hesham100'
 const LINKEDIN = 'https://www.linkedin.com/in/mohamed-hisham-3362b53a1/'
 
