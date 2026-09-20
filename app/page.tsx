@@ -373,6 +373,11 @@ const skillBoxes = [
       { name: 'HTML5', icon: icon('html5') },
       { name: 'CSS3', icon: icon('css3') },
       { name: 'Redux', icon: icon('redux') },
+      { name: 'Zustand', icon: icon('zustand') },
+      {
+        name: 'TanStack Query',
+        icon: 'https://cdn.simpleicons.org/reactquery/FF4154',
+      },
     ],
   },
   {
