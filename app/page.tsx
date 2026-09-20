@@ -349,6 +349,13 @@ const projects = [
     link: 'https://brand-landing-page-chi.vercel.app/',
     image: '/dapper.png',
   },
+  {
+    title: 'Portfolio v1',
+    desc: 'Earlier personal portfolio — dark peach UI, skills & projects showcase',
+    tags: ['React', 'Tailwind', 'Framer Motion'],
+    link: 'https://portfolio-olot.vercel.app/',
+    image: '/old-portfolio.png',
+  },
 ]
 
 const icon = (name: string) =>
