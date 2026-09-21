@@ -343,6 +343,13 @@ const projects = [
     image: '/beautylab.png',
   },
   {
+    title: 'VELOUR',
+    desc: 'Premium skincare e-commerce brand — rituals, collections & checkout UI',
+    tags: ['HTML', 'CSS', 'JavaScript'],
+    link: 'https://mohamed-hesham100.github.io/ecommerce/',
+    image: '/velour.png',
+  },
+  {
     title: 'Dapper &',
     desc: 'Fashion brand landing — everyday outfits, bestsellers & drops',
     tags: ['React', 'Vite', 'Landing'],
